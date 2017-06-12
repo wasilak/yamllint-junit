@@ -10,5 +10,8 @@ setup(
     download_url='https://github.com/wasilak/yamllint-junit/archive/0.5.tar.gz',
     keywords=['ansible', 'junit'],
     classifiers=[],
-    scripts=['bin/yamllint-junit']
+    scripts=['bin/yamllint-junit'],
+    install_requires=[
+        'yamllint',
+    ]
 )
