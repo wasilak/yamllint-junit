@@ -3,7 +3,7 @@ import xml.etree.cElementTree as ET
 import sys
 from os import isatty
 
-__version__ = "0.4"
+__version__ = "0.5"
 
 
 def version():
