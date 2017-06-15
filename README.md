@@ -2,21 +2,21 @@
 ---
 
 ### Installation
-via pip;
+via pip:
 ```shell
 pip install yamllint-junit
 ```
 ### Updating
-via pip;
+via pip:
 ```shell
 pip install yamllint-junit --upgrade
 ```
 
 ### Usage:
-1. run `yamllint-junit` and pass `yamllint` (with `-f parsable` option) output to it
-  ```shell
-  yamllint -f parsable test.yaml | yamllint-junit -o yamllint-junit.xml
-  ```
+run `yamllint-junit` and pass `yamllint` (with `-f parsable` option) output to it
+```shell
+yamllint -f parsable test.yaml | yamllint-junit -o yamllint-junit.xml
+```
 
 ### Output
 * if there are any lint errors, full JUnit XML will be created

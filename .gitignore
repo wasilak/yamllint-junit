@@ -171,6 +171,7 @@ Session.vim
 *~
 # auto-generated tag files
 tags
+.tags
 
 ### Windows ###
 # Windows thumbnail cache files
