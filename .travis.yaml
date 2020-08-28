@@ -17,8 +17,8 @@ before_install:
 install:
   - pip install ".[test]" .  # install package + test dependencies
 before_script:
-# 127 are the length of a line in the github-editor
-  -  flake8 --count --exclude ./tests,./doc --max-complexity 20 --max-line-length 127 --statistics
+  # 127 are the length of a line in the github-editor
+  - flake8 --count --exclude ./tests,./doc --max-complexity 20 --max-line-length 127 --statistics
 script: pytest  # run tests
 after_success:
   - codecov  # submit coverage
