@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 #  -*- coding: utf-8 -*-
 import io
-from unittest import mock
+import mock
 import pytest
 import yamllint_junit_bootstrap.bootstrap as yamllint_junit
 
