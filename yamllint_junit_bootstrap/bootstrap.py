@@ -1,18 +1,40 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+
 from optparse import OptionParser
 import xml.etree.cElementTree as ET
 import sys
 from os import isatty
 
-__version__ = "0.5"
+__version__ = "0.6"
+"""Version of lib"""
 
 
 def version():
+    """
+    Returns version of libary
+
+    :return: Version of lib as String
+    """
     return __version__
 
+
+def is_pipe():
+    """
+    Return if stdin has a value
+
+    :return: True, if there is a value on stdin
+    """
+    return not isatty(sys.stdin.fileno())
+
+
 def main():
+    """
+    Main Method of lib
+    """
 
     # detecting if script was run interactively
-    is_pipe = not isatty(sys.stdin.fileno())
+
 
     junit_xml_output = "yamllint-junit.xml"
 
@@ -21,13 +43,15 @@ def main():
         version="%prog " + version()
     )
 
-    parser.add_option("-o", "--output", action="store", dest="output_file", help="output XML to file", default=junit_xml_output)
-    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", help="print XML to console as command output", default=False)
+    parser.add_option("-o", "--output", action="store", dest="output_file", help="output XML to file",
+                      default=junit_xml_output)
+    parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
+                      help="print XML to console as command output", default=False)
 
     (options, args) = parser.parse_args()
 
     lines = []
-    if is_pipe:
+    if is_pipe():
         for line in sys.stdin:
             if len(line.strip()) > 0:
                 lines.append(line.strip())
@@ -51,7 +75,7 @@ def main():
     testsuite = ET.SubElement(testsuites, "testsuite", errors=errors_count, failures="0", tests=errors_count, time="0")
 
     if 0 == len(lines):
-        testcase = ET.SubElement(testsuite, "testcase", name="dummy_testcase.py")
+        ET.SubElement(testsuite, "testcase", name="dummy_testcase.py")
     else:
         parsed_lines = []
         for line in lines:
@@ -82,4 +106,4 @@ def main():
     parsed_lines_xml = ET.tostring(testsuites, encoding='utf8', method='xml')
 
     if options.verbose:
-        print parsed_lines_xml
+        print(parsed_lines_xml)
