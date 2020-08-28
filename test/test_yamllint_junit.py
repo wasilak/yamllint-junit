@@ -22,9 +22,10 @@ def test_no_parameters_no_input():
 
 def test_with_input(monkeypatch):
     # Prepare
-    stdin = "first.yaml:7:1: [error] trailing spaces (trailing-spaces)\n" \
-            + "first.yaml:16:1: [error] trailing spaces (trailing-spaces)\n" \
-            + "second.yaml:22:1: [error] trailing spaces (trailing-spaces)\n"
+    stdin = u"""\
+first.yaml:7:1: [error] trailing spaces (trailing-spaces)
+first.yaml:16:1: [error] trailing spaces (trailing-spaces)
+second.yaml:22:1: [error] trailing spaces (trailing-spaces)"""
     monkeypatch.setattr('sys.stdin', io.StringIO(stdin))
     # It's terrible to mock sys.stdin.fileno() in a test, so I extracted it in an extra method
     yamllint_junit.is_pipe = mock.MagicMock(return_value=True)
