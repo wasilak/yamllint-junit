@@ -34,8 +34,6 @@ def main():
     """
 
     # detecting if script was run interactively
-
-
     junit_xml_output = "yamllint-junit.xml"
 
     parser = OptionParser(

@@ -26,7 +26,7 @@ setup(
     ],
     tests_require=[
         'pytest',
-        'pytest-flake8',
+        'flake8',
         'coverage',
         'mock',
     ],
