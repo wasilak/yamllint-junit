@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+
 from setuptools import setup
 
 from yamllint_junit_bootstrap import bootstrap
@@ -12,13 +15,19 @@ setup(
     author='wasil',
     author_email='piotr.m.wasilewski@gmail.com',
     url='https://github.com/wasilak/yamllint-junit',
-    download_url='https://github.com/wasilak/yamllint-junit/archive/%s.tar.gz'  % (version),
+    download_url='https://github.com/wasilak/yamllint-junit/archive/%s.tar.gz' % version,
     keywords=['yaml', 'junit'],
     classifiers=[],
-    entry_points = {
+    entry_points={
         "console_scripts": ['yamllint-junit = yamllint_junit_bootstrap.bootstrap:main']
     },
     install_requires=[
         'yamllint',
+    ],
+    tests_require=[
+        'pytest',
+        'flake8',
+        'coverage',
+        'mock',
     ],
 )
