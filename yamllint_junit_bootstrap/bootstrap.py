@@ -6,7 +6,7 @@ import xml.etree.cElementTree as ET
 import sys
 from os import isatty
 
-__version__ = "0.6"
+__version__ = "0.7"
 """Version of lib"""
 
 
