@@ -18,7 +18,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author='wasil',
-    author_email='piotr.m.wasilewski@gmail.com',
+    author_email='piotr.m.boruc@gmail.com',
     url='https://github.com/wasilak/yamllint-junit',
     download_url='https://github.com/wasilak/yamllint-junit/archive/%s.tar.gz' % version,
     keywords=['yaml', 'junit'],
