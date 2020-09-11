@@ -7,11 +7,16 @@ from yamllint_junit_bootstrap import bootstrap
 
 version = bootstrap.version()
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='yamllint-junit',
     packages=['yamllint_junit_bootstrap'],
     version=version,
     description='yamllint to JUnit converter.',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author='wasil',
     author_email='piotr.m.wasilewski@gmail.com',
     url='https://github.com/wasilak/yamllint-junit',
