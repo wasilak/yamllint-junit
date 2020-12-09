@@ -1,22 +1,22 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
 
-from optparse import OptionParser
+import argparse
 import xml.etree.cElementTree as ET
 import sys
-from os import isatty
+import signal
+from os import isatty, path
 
-__version__ = "0.7"
+__version__ = "0.8"
 """Version of lib"""
 
 
-def version():
-    """
-    Returns version of libary
+def signal_handler(sig, frame):
+    print('You pressed Ctrl+C!')
+    sys.exit(0)
 
-    :return: Version of lib as String
-    """
-    return __version__
+
+signal.signal(signal.SIGINT, signal_handler)
 
 
 def is_pipe():
@@ -33,20 +33,18 @@ def main():
     Main Method of lib
     """
 
-    # detecting if script was run interactively
     junit_xml_output = "yamllint-junit.xml"
 
-    parser = OptionParser(
-        usage="%prog [yamllint-junit output file] [options]",
-        version="%prog " + version()
+    parser = argparse.ArgumentParser(
+        usage="%(prog)s [options] input",
     )
 
-    parser.add_option("-o", "--output", action="store", dest="output_file", help="output XML to file",
-                      default=junit_xml_output)
-    parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
-                      help="print XML to console as command output", default=False)
+    parser.add_argument('input', nargs='?', type=argparse.FileType('r'), default=("" if sys.stdin.isatty() else sys.stdin))
+    parser.add_argument("-o", "--output", type=str, help="output XML to file", default=junit_xml_output)
+    parser.add_argument("-v", "--verbose", action="store_true", help="print XML to console as command output", default=False)
+    parser.add_argument("--version", action='version', version='%(prog)s ' + __version__)
 
-    (options, args) = parser.parse_args()
+    args = parser.parse_args()
 
     lines = []
     if is_pipe():
@@ -54,15 +52,15 @@ def main():
             if len(line.strip()) > 0:
                 lines.append(line.strip())
 
-    if len(lines) == 0 and (len(args) == 0 or not args[0]):
+    if not is_pipe() and not path.isfile(args.input.name):
         parser.print_help()
         parser.error('You need to provide file with output or pipe data from "yamllint" command.')
         exit(1)
 
-    if len(lines) == 0:
-        ansible_lint_output = open(args[0], "r").read().split("\n")
+    if not is_pipe():
+        lint_output = open(args.input.name, "r").read().split("\n")
 
-        for line in ansible_lint_output:
+        for line in lint_output:
             if len(line.strip()) > 0:
                 lines.append(line.strip())
 
@@ -100,8 +98,8 @@ def main():
             ).text = line_data['error']['text']
 
     tree = ET.ElementTree(testsuites)
-    tree.write(options.output_file, encoding='utf8', method='xml')
+    tree.write(args.output, encoding='utf8', method='xml')
     parsed_lines_xml = ET.tostring(testsuites, encoding='utf8', method='xml')
 
-    if options.verbose:
+    if args.verbose:
         print(parsed_lines_xml)
