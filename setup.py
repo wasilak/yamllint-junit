@@ -5,7 +5,7 @@ from setuptools import setup
 
 from yamllint_junit_bootstrap import bootstrap
 
-version = bootstrap.version()
+version = bootstrap.__version__
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
