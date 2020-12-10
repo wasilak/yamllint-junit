@@ -6,6 +6,7 @@ python:
   - 3.6
   - 3.7
   - 3.8
+  - 3.9
 before_install:
   - python --version
   - pip install -U pip
@@ -14,11 +15,11 @@ before_install:
   - pip install -U mock
   - pip install codecov
 install:
-  - pip install ".[test]" .  # install package + test dependencies
+  - pip install tox-travis
 before_script:
   # 127 are the length of a line in the github-editor
   - flake8 --count --exclude ./tests,./doc --max-complexity 20 --max-line-length 127 --statistics
-script: pytest  # run tests
+script: tox  # run tests
 deploy:
   provider: pypi
   on:
