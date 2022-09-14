@@ -66,9 +66,10 @@ def main():
 
     testsuites = ET.Element("testsuites")
 
-    errors_count = str(len(lines))
+    errors_count = 0
+    skipped_count = 0
 
-    testsuite = ET.SubElement(testsuites, "testsuite", errors=errors_count, failures="0", tests=errors_count, time="0")
+    testsuite = ET.SubElement(testsuites, "testsuite", errors="0", skipped="0", failures="0", tests=str(len(lines)), time="0")
 
     if 0 == len(lines):
         ET.SubElement(testsuite, "testcase", name="dummy_testcase.py")
@@ -88,15 +89,23 @@ def main():
             parsed_lines.append(line_data)
 
             testcase = ET.SubElement(testsuite, "testcase", name=line_data['filename'])
+            if parsed_line[3].strip().startswith("[warning]"):
+                test_result = "skipped"
+                skipped_count += 1
+            else:
+                test_result = "failure"
+                errors_count += 1
             ET.SubElement(
                 testcase,
-                "failure",
+                test_result,
                 file=line_data['filename'],
                 line=str(line_data['line']),
                 message=line_data['error']['text'],
                 type="YAML Lint"
             ).text = line_data['error']['text']
 
+    testsuite.attrib['errors'] = str(errors_count)
+    testsuite.attrib['skipped'] = str(skipped_count)
     tree = ET.ElementTree(testsuites)
     tree.write(args.output, encoding='utf8', method='xml')
     parsed_lines_xml = ET.tostring(testsuites, encoding='utf8', method='xml')
