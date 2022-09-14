@@ -88,9 +88,12 @@ def main():
             parsed_lines.append(line_data)
 
             testcase = ET.SubElement(testsuite, "testcase", name=line_data['filename'])
+            test_result = "failure"
+            if parsed_line[3].strip().startswith("[warning]"):
+                test_result = "skipped"
             ET.SubElement(
                 testcase,
-                "failure",
+                test_result,
                 file=line_data['filename'],
                 line=str(line_data['line']),
                 message=line_data['error']['text'],
