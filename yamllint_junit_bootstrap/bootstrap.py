@@ -7,7 +7,7 @@ import sys
 import signal
 from os import isatty, path
 
-__version__ = "0.8"
+__version__ = "0.9"
 """Version of lib"""
 
 
