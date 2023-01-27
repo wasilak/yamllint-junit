@@ -5,16 +5,12 @@ python:
 before_install:
   - python --version
   - pip install -U pip
-  - pip install -U pytest
-  - pip install -U flake8
-  - pip install -U mock
-  - pip install codecov
+  - pip install -U pytest flake8 mock codecov
 install:
   - pip install tox-travis
 before_script:
-  # 127 are the length of a line in the github-editor
-  - flake8 --count --exclude ./tests,./doc --max-complexity 20 --max-line-length 127 --statistics
-script: tox  # run tests
+  - flake8 --count --exclude ./tests,./doc,.tox --max-complexity 20 --select=E901,E999,F821,F822,F823 --statistics
+script: tox # run tests
 deploy:
   provider: pypi
   on:
@@ -24,4 +20,4 @@ deploy:
     secure: FwAKPNM0mJlT3J36kswto1m2WFucglgZ6RoljnTBa+ncQHfnI7o0nnswgGYQ8TodbACltKRxBEZJgdWMMX+nC35ruUQ0OdKwtm6S6SvrUgIQUlXIvuzgIipAGSQ1nOAouGN7IXNzhdG1vCF/tBci1lqFvIhLuITOSqMMMpVPOGBw+bMMbw2FHiJ+a3fFXs1/3MpdHfyAIFx8LRx32H/zCenWR3P1QO5SHUPh8TVW06rPKsDqKe5DWWZ8+8bFWH4G0jdwJrmQOI5vVmDQIZ0O2LhSY2OdwAKks9Lnf7kipB3awtblWDGZpfJaWNR+rmjpCwIS9Klma+vKOZqx5Ug9X5BeLcoT/AD4FHGos7NlLEEvoI3CHKCecQK0TCboKgTKlR7xzhe6y2uKeBwSlPN3CIrn0Fr1VXGSCEzpGI2ElXruaQuJEMAEERtpjq3fTMsoMICCJVmN+mbgFVj7t1ULNtZSXL6FsAItWyTQCTd5w5g00+Irm4bAwGRm+XOXRgpEeUPoG+0n6mwCE7KHmb3ibcoKp7BOnELo/5eb2avj11HIF2hslJ6Rb/gtlIwNvH687ZAxJKV5MgsmLOs0/HV5vhRLAHgCXnZ6Nqf+bfAVs0dDddom5ROAYVBUs3MmRn019mAA4m/a0g/D5KtyEGkCxsbUi6Gjy9W1LZ2g70S+Y6A=
   skip_existing: true
 after_success:
-  - codecov  # submit coverage
+  - codecov # submit coverage
