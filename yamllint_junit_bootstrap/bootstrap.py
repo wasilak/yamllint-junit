@@ -7,7 +7,7 @@ import sys
 import signal
 from os import isatty, path
 
-__version__ = "0.9"
+__version__ = "0.10"
 """Version of lib"""
 
 
@@ -43,6 +43,7 @@ def main():
     parser.add_argument("-o", "--output", type=str, help="output XML to file", default=junit_xml_output)
     parser.add_argument("-v", "--verbose", action="store_true", help="print XML to console as command output", default=False)
     parser.add_argument("--version", action='version', version='%(prog)s ' + __version__)
+    parser.add_argument("--test-name", type=str, help="testsuite name to report in the JUnit file", default='yamllint')
 
     args = parser.parse_args()
 
@@ -69,10 +70,11 @@ def main():
     errors_count = 0
     skipped_count = 0
 
-    testsuite = ET.SubElement(testsuites, "testsuite", errors="0", skipped="0", failures="0", tests=str(len(lines)), time="0")
+    testsuite = ET.SubElement(testsuites, "testsuite", name=args.test_name, errors="0", skipped="0", failures="0", tests=str(len(lines)), time="0")
 
-    if 0 == len(lines):
-        ET.SubElement(testsuite, "testcase", name="dummy_testcase.py")
+    if not lines:
+        ET.SubElement(testsuite, "testcase", name="no_yamllint_errors")
+        testsuite.attrib["tests"] = "1"
     else:
         parsed_lines = []
         for line in lines:
@@ -108,7 +110,6 @@ def main():
     testsuite.attrib['skipped'] = str(skipped_count)
     tree = ET.ElementTree(testsuites)
     tree.write(args.output, encoding='utf8', method='xml')
-    parsed_lines_xml = ET.tostring(testsuites, encoding='utf8', method='xml')
 
     if args.verbose:
-        print(parsed_lines_xml)
+        tree.write(sys.stdout.buffer, encoding='utf8', method='xml')
