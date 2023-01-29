@@ -58,18 +58,7 @@ def main():
 
     args = parser.parse_args()
 
-    lines = []
-    if args.input.name is sys.stdin:
-        lines = read_file_lines(sys.stdin)
-
-    else:
-        if not path.isfile(args.input.name):
-            parser.print_help()
-            parser.error('You need to provide file with output or pipe data from "yamllint" command.')
-            exit(1)
-
-        with open(args.input.name, "r") as fh:
-            lines = read_file_lines(fh)
+    lines = read_file_lines(args.input)
 
     testsuites = ET.Element("testsuites")
 
