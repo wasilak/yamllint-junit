@@ -50,7 +50,7 @@ def main():
         usage="%(prog)s [options] input",
     )
 
-    parser.add_argument('input', nargs='?', type=argparse.FileType('r'), default=(sys.stdin if is_pipe() else ""))
+    parser.add_argument('input', nargs=('?' if is_pipe() else 1), type=argparse.FileType('r'), default=(sys.stdin if is_pipe() else ""))
     parser.add_argument("-o", "--output", type=str, help="output XML to file", default=junit_xml_output)
     parser.add_argument("-v", "--verbose", action="store_true", help="print XML to console as command output", default=False)
     parser.add_argument("--version", action='version', version='%(prog)s ' + __version__)
