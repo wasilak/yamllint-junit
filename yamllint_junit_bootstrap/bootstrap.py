@@ -28,7 +28,11 @@ def is_pipe():
     return not isatty(sys.stdin.fileno())
 
 def read_file_lines(file_descriptor):
-    """Read lines from file descriptor into array"""
+    """
+    Read lines from file descriptor into array
+    
+    :return: List of of non-empty lines from file descriptor
+    """
     lines = []
     for line in file_descriptor.readline():
         if len(line.strip()) > 0:
