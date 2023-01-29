@@ -1,4 +1,4 @@
-[yamllint-junit](https://github.com/adrienverge/yamllint) to JUnit converter [![Build Status](https://travis-ci.com/wasilak/yamllint-junit.svg?branch=master)](https://travis-ci.com/wasilak/yamllint-junit)
+[yamllint](https://github.com/adrienverge/yamllint) to JUnit converter [![Build Status](https://travis-ci.com/wasilak/yamllint-junit.svg?branch=master)](https://travis-ci.com/wasilak/yamllint-junit)
 ---
 
 ### Installation
