@@ -34,7 +34,7 @@ def read_file_lines(file_descriptor):
     :return: List of of non-empty lines from file descriptor
     """
     lines = []
-    for line in file_descriptor.readline():
+    for line in file_descriptor.readlines():
         if len(line.strip()) > 0:
             lines.append(line.strip())
     return lines
