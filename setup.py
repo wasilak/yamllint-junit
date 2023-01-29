@@ -33,6 +33,5 @@ setup(
         'pytest',
         'flake8',
         'coverage',
-        'mock',
     ],
 )
