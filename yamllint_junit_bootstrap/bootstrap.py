@@ -27,6 +27,17 @@ def is_pipe():
     """
     return not isatty(sys.stdin.fileno())
 
+def read_file_lines(file_descriptor):
+    """
+    Read lines from file descriptor into array
+    
+    :return: List of of non-empty lines from file descriptor
+    """
+    lines = []
+    for line in file_descriptor.readlines():
+        if len(line.strip()) > 0:
+            lines.append(line.strip())
+    return lines
 
 def main():
     """
@@ -39,7 +50,7 @@ def main():
         usage="%(prog)s [options] input",
     )
 
-    parser.add_argument('input', nargs='?', type=argparse.FileType('r'), default=("" if sys.stdin.isatty() else sys.stdin))
+    parser.add_argument('input', nargs=('?' if is_pipe() else 1), type=argparse.FileType('r'), default=(sys.stdin if is_pipe() else ""))
     parser.add_argument("-o", "--output", type=str, help="output XML to file", default=junit_xml_output)
     parser.add_argument("-v", "--verbose", action="store_true", help="print XML to console as command output", default=False)
     parser.add_argument("--version", action='version', version='%(prog)s ' + __version__)
@@ -47,23 +58,7 @@ def main():
 
     args = parser.parse_args()
 
-    lines = []
-    if is_pipe():
-        for line in sys.stdin:
-            if len(line.strip()) > 0:
-                lines.append(line.strip())
-
-    if not is_pipe() and not path.isfile(args.input.name):
-        parser.print_help()
-        parser.error('You need to provide file with output or pipe data from "yamllint" command.')
-        exit(1)
-
-    if not is_pipe():
-        lint_output = open(args.input.name, "r").read().split("\n")
-
-        for line in lint_output:
-            if len(line.strip()) > 0:
-                lines.append(line.strip())
+    lines = read_file_lines(args.input)
 
     testsuites = ET.Element("testsuites")
 

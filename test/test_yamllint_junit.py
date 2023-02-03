@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 #  -*- coding: utf-8 -*-
 import io
-import mock
+import unittest.mock
 import yamllint_junit_bootstrap.bootstrap as yamllint_junit
 
 
@@ -13,8 +13,8 @@ first.yaml:16:1: [error] trailing spaces (trailing-spaces)
 second.yaml:22:1: [error] trailing spaces (trailing-spaces)"""
     monkeypatch.setattr('sys.stdin', io.StringIO(stdin))
     # It's terrible to mock sys.stdin.fileno() in a test, so I extracted it in an extra method
-    yamllint_junit.is_pipe = mock.MagicMock(return_value=True)
-    yamllint_junit.ET.ElementTree.write = mock.MagicMock()
+    yamllint_junit.is_pipe = unittest.mock.MagicMock(return_value=True)
+    yamllint_junit.ET.ElementTree.write = unittest.mock.MagicMock()
 
     # Execute
     yamllint_junit.main()
