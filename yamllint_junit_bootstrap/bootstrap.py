@@ -7,7 +7,7 @@ import sys
 import signal
 from os import isatty, path
 
-__version__ = "0.10.1"
+__version__ = "0.10.2"
 """Version of lib"""
 
 
@@ -39,11 +39,16 @@ def main():
         usage="%(prog)s [options] input",
     )
 
-    parser.add_argument('input', nargs='?', type=argparse.FileType('r'), default=("" if sys.stdin.isatty() else sys.stdin))
-    parser.add_argument("-o", "--output", type=str, help="output XML to file", default=junit_xml_output)
-    parser.add_argument("-v", "--verbose", action="store_true", help="print XML to console as command output", default=False)
-    parser.add_argument("--version", action='version', version='%(prog)s ' + __version__)
-    parser.add_argument("--test-name", type=str, help="testsuite name to report in the JUnit file", default='yamllint')
+    parser.add_argument('input', nargs='?', type=argparse.FileType(
+        'r'), default=("" if sys.stdin.isatty() else sys.stdin))
+    parser.add_argument("-o", "--output", type=str,
+                        help="output XML to file", default=junit_xml_output)
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="print XML to console as command output", default=False)
+    parser.add_argument("--version", action='version',
+                        version='%(prog)s ' + __version__)
+    parser.add_argument("--test-name", type=str,
+                        help="testsuite name to report in the JUnit file", default='yamllint')
 
     args = parser.parse_args()
 
@@ -55,7 +60,8 @@ def main():
 
     if not is_pipe() and not path.isfile(args.input.name):
         parser.print_help()
-        parser.error('You need to provide file with output or pipe data from "yamllint" command.')
+        parser.error(
+            'You need to provide file with output or pipe data from "yamllint" command.')
         exit(1)
 
     if not is_pipe():
@@ -70,7 +76,10 @@ def main():
     errors_count = 0
     skipped_count = 0
 
-    testsuite = ET.SubElement(testsuites, "testsuite", name=args.test_name, errors="0", skipped="0", failures="0", tests=str(len(lines)), time="0")
+    testsuite = ET.SubElement(testsuites, "testsuite", name=args.test_name,
+                              errors="0", skipped="0", failures="0", tests=str(len(lines)), time="0")
+
+    grouped_cases = {}
 
     if not lines:
         ET.SubElement(testsuite, "testcase", name="no_yamllint_errors")
@@ -90,7 +99,13 @@ def main():
             }
             parsed_lines.append(line_data)
 
-            testcase = ET.SubElement(testsuite, "testcase", name=line_data['filename'])
+            if line_data['filename'] in grouped_cases:
+                testcase = grouped_cases[line_data['filename']]
+            else:
+                testcase = ET.SubElement(
+                    testsuite, "testcase", name=line_data['filename'])
+                grouped_cases[line_data['filename']] = testcase
+
             if parsed_line[3].strip().startswith("[warning]"):
                 test_result = "skipped"
                 skipped_count += 1
