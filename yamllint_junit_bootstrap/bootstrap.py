@@ -79,7 +79,8 @@ def main():
     testsuite = ET.SubElement(testsuites, "testsuite", name=args.test_name,
                               errors="0", skipped="0", failures="0", tests=str(len(lines)), time="0")
 
-    grouped_cases = {}
+    grouped_error_cases = {}
+    grouped_warning_cases = {}
 
     if not lines:
         ET.SubElement(testsuite, "testcase", name="no_yamllint_errors")
@@ -99,12 +100,18 @@ def main():
             }
             parsed_lines.append(line_data)
 
-            if line_data['filename'] in grouped_cases:
-                testcase = grouped_cases[line_data['filename']]
+            if line_data['filename'] in grouped_error_cases and parsed_line[3].strip().startswith("[error]"):
+                testcase = grouped_error_cases[line_data['filename']]
+            elif line_data['filename'] in grouped_warning_cases and parsed_line[3].strip().startswith("[warning]"):
+                testcase = grouped_warning_cases[line_data['filename']]
+            elif line_data['filename'] not in grouped_warning_cases and parsed_line[3].strip().startswith("[warning]"):
+                testcase = ET.SubElement(
+                    testsuite, "testcase", name=f"{line_data['filename']} - warnings")
+                grouped_warning_cases[line_data['filename']] = testcase
             else:
                 testcase = ET.SubElement(
-                    testsuite, "testcase", name=line_data['filename'])
-                grouped_cases[line_data['filename']] = testcase
+                    testsuite, "testcase", name=f"{line_data['filename']} - errors")
+                grouped_error_cases[line_data['filename']] = testcase
 
             if parsed_line[3].strip().startswith("[warning]"):
                 test_result = "skipped"
